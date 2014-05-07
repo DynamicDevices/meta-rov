@@ -1,0 +1,250 @@
+diff -ur mjpg-streamer.org/Makefile mjpg-streamer/Makefile
+--- mjpg-streamer.org/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/Makefile	2014-05-07 16:45:53.545518453 +0100
+@@ -12,9 +12,6 @@
+ # $ sudo make DESTDIR=/some/path install
+ DESTDIR = /usr/local
+ 
+-# set the compiler to use
+-CC = gcc
+-
+ SVNDEV := -D'SVN_REV="$(shell svnversion -c .)"'
+ CFLAGS += $(SVNDEV)
+ 
+@@ -26,7 +23,7 @@
+ # we are using the libraries "libpthread" and "libdl"
+ # libpthread is used to run several tasks (virtually) in parallel
+ # libdl is used to load the plugins (shared objects) at runtime
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ # define the name of the program
+ APP_BINARY = mjpg_streamer
+diff -ur mjpg-streamer.org/plugins/input_control/Makefile mjpg-streamer/plugins/input_control/Makefile
+--- mjpg-streamer.org/plugins/input_control/Makefile	2014-05-07 16:38:44.000000000 +0100
++++ mjpg-streamer/plugins/input_control/Makefile	2014-05-07 16:46:32.733518556 +0100
+@@ -7,12 +7,11 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
++LFLAGS += -Wl,--hash-style=gnu
+ 
+ all: input_control.so
+ 
+diff -ur mjpg-streamer.org/plugins/input_file/Makefile mjpg-streamer/plugins/input_file/Makefile
+--- mjpg-streamer.org/plugins/input_file/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/plugins/input_file/Makefile	2014-05-07 16:54:36.673519817 +0100
+@@ -7,13 +7,11 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
+-LFLAGS += 
++LFLAGS += -Wl,--hash-style=gnu
+ 
+ all: input_file.so
+ 
+Only in mjpg-streamer/plugins/input_file: input_file.so
+diff -ur mjpg-streamer.org/plugins/input_gspcav1/Makefile mjpg-streamer/plugins/input_gspcav1/Makefile
+--- mjpg-streamer.org/plugins/input_gspcav1/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/plugins/input_gspcav1/Makefile	2014-05-07 16:47:45.481518747 +0100
+@@ -7,13 +7,11 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ all: input_gspcav1.so
+ 
+@@ -21,7 +19,7 @@
+ 	rm -f *.a *.o core *~ *.so *.lo
+ 
+ input_gspcav1.so: $(OTHER_HEADERS) input_gspcav1.c spcav4l.lo utils.lo encoder.lo huffman.lo marker.lo quant.lo
+-	$(CC) $(CFLAGS) -o $@ input_gspcav1.c spcav4l.lo utils.lo encoder.lo huffman.lo marker.lo quant.lo
++	$(CC) $(CFLAGS) $(LFLAGS) -o $@ input_gspcav1.c spcav4l.lo utils.lo encoder.lo huffman.lo marker.lo quant.lo
+ 
+ spcav4l.lo:	spcav4l.c spcav4l.h
+ 	$(CC) -c $(CFLAGS) -o $@ $<
+diff -ur mjpg-streamer.org/plugins/input_testpicture/Makefile mjpg-streamer/plugins/input_testpicture/Makefile
+--- mjpg-streamer.org/plugins/input_testpicture/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/plugins/input_testpicture/Makefile	2014-05-07 16:48:48.169518908 +0100
+@@ -7,13 +7,11 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ all: input_testpicture.so
+ 
+@@ -32,7 +30,7 @@
+ 	rm -f pictures/640x480_1.jpg pictures/640x480_2.jpg
+ 
+ input_testpicture.so: $(OTHER_HEADERS) input_testpicture.c testpictures.h
+-	$(CC) $(CFLAGS) -o $@ input_testpicture.c
++	$(CC) $(CFLAGS) $(LFLAGS) -o $@ input_testpicture.c
+ 
+ # converts multiple JPG files to a single C header file
+ testpictures.h: pictures/960x720_1.jpg pictures/640x480_1.jpg pictures/320x240_1.jpg pictures/160x120_1.jpg pictures/160x120_2.jpg pictures/320x240_2.jpg pictures/640x480_2.jpg pictures/960x720_2.jpg
+diff -ur mjpg-streamer.org/plugins/input_uvc/Makefile mjpg-streamer/plugins/input_uvc/Makefile
+--- mjpg-streamer.org/plugins/input_uvc/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/plugins/input_uvc/Makefile	2014-05-07 16:49:14.205518978 +0100
+@@ -7,11 +7,10 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O1 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
++LFLAGS += -ljpeg -Wl,--hash-style=gnu
+ 
+ #CFLAGS += -g
+ #CFLAGS += -DDEBUG
+diff -ur mjpg-streamer.org/plugins/output_autofocus/Makefile mjpg-streamer/plugins/output_autofocus/Makefile
+--- mjpg-streamer.org/plugins/output_autofocus/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/plugins/output_autofocus/Makefile	2014-05-07 16:49:35.833519035 +0100
+@@ -7,13 +7,11 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ all: output_autofocus.so
+ 
+diff -ur mjpg-streamer.org/plugins/output_file/Makefile mjpg-streamer/plugins/output_file/Makefile
+--- mjpg-streamer.org/plugins/output_file/Makefile	2014-05-07 16:38:44.000000000 +0100
++++ mjpg-streamer/plugins/output_file/Makefile	2014-05-07 16:54:27.929519796 +0100
+@@ -7,13 +7,11 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ all: output_file.so
+ 
+diff -ur mjpg-streamer.org/plugins/output_http/Makefile mjpg-streamer/plugins/output_http/Makefile
+--- mjpg-streamer.org/plugins/output_http/Makefile	2014-05-07 16:38:44.000000000 +0100
++++ mjpg-streamer/plugins/output_http/Makefile	2014-05-07 16:50:35.369519190 +0100
+@@ -7,14 +7,12 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O1 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS +=  -g
+ #CFLAGS += -DDEBUG
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ all: output_http.so
+ 
+@@ -22,7 +20,7 @@
+ 	rm -f *.a *.o core *~ *.so *.lo
+ 
+ output_http.so: $(OTHER_HEADERS) output_http.c httpd.lo
+-	$(CC) $(CFLAGS) -o $@ output_http.c httpd.lo
++	$(CC) $(CFLAGS) $(LFLAGS) -o $@ output_http.c httpd.lo
+ 
+ httpd.lo: $(OTHER_HEADERS) httpd.h httpd.c
+ 	$(CC) -c $(CFLAGS) -o $@ httpd.c
+diff -ur mjpg-streamer.org/plugins/output_http/httpd.c mjpg-streamer/plugins/output_http/httpd.c
+--- mjpg-streamer.org/plugins/output_http/httpd.c	2014-05-07 16:38:44.000000000 +0100
++++ mjpg-streamer/plugins/output_http/httpd.c	2014-05-07 16:51:49.993519387 +0100
+@@ -45,6 +45,10 @@
+ #define V4L2_CTRL_TYPE_STRING_SUPPORTED
+ #endif
+ 
++#ifndef V4L2_FMT_FLAG_EMULATED
++#define V4L2_FMT_FLAG_EMULATED 0x0002
++#endif
++
+ static globals *pglobal;
+ extern context servers[MAX_OUTPUT_PLUGINS];
+ 
+diff -ur mjpg-streamer.org/plugins/output_udp/Makefile mjpg-streamer/plugins/output_udp/Makefile
+--- mjpg-streamer.org/plugins/output_udp/Makefile	2014-05-07 16:38:45.000000000 +0100
++++ mjpg-streamer/plugins/output_udp/Makefile	2014-05-07 16:52:14.225519448 +0100
+@@ -9,13 +9,11 @@
+ 
+ # Modified to work with the output_udp plugin by D.Zachariadis
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ #CFLAGS += -DDEBUG
+-LFLAGS += -lpthread -ldl
++LFLAGS += -lpthread -ldl -Wl,--hash-style=gnu
+ 
+ all: output_udp.so
+ 
+@@ -23,4 +21,4 @@
+ 	rm -f *.a *.o core *~ *.so *.lo
+ 
+ output_udp.so: $(OTHER_HEADERS) output_udp.c
+-	$(CC) $(CFLAGS) -o $@ output_udp.c
++	$(CC) $(CFLAGS) $(LFLAGS) -o $@ output_udp.c
+diff -ur mjpg-streamer.org/plugins/output_viewer/Makefile mjpg-streamer/plugins/output_viewer/Makefile
+--- mjpg-streamer.org/plugins/output_viewer/Makefile	2014-05-07 16:38:44.000000000 +0100
++++ mjpg-streamer/plugins/output_viewer/Makefile	2014-05-07 16:52:48.945519537 +0100
+@@ -7,15 +7,13 @@
+ #
+ ###############################################################
+ 
+-CC = gcc
+-
+ OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
+ 
+ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+ CFLAGS += -DUSE_SDL -I/usr/include/SDL
+ #CFLAGS += -DDEBUG
+ 
+-LFLAGS += -ljpeg -lSDL
++LFLAGS += -ljpeg -lSDL -Wl,--hash-style=gnu
+ 
+ all: output_viewer.so
+ 
