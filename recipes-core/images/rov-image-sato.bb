@@ -46,6 +46,13 @@ IMAGE_INSTALL += "\
                 monotools-server \
 		i2c-tools \
 		rov-config \
+                mjpg-streamer \
+		gst-plugins-base-tcp \
+                gst-plugins-good-jpeg \
+                gst-plugins-good-video4linux2 \
+                gst-plugins-base-videorate \
+                gst-plugins-good-multipart \
+                gst-ffmpeg \
 		"
 
 # Disable splash

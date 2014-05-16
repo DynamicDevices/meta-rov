@@ -40,6 +40,12 @@ IMAGE_INSTALL += "\
 		mono \
 		mono-dev \
 		devmem2 \
+		gst-plugins-base-tcp \
+		gst-plugins-good-jpeg \
+		gst-plugins-good-video4linux2 \
+		gst-plugins-base-videorate \
+		gst-plugins-good-multipart \
+		gst-ffmpeg \
 		"
 
 # Disable splash
