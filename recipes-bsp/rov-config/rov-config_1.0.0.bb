@@ -7,11 +7,13 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
 
 SRC_URI = "file://LICENSE \
            file://configure-smart-channels.sh \
+           file://gst-server.sh \
 "
 
 do_install() {
         mkdir -p ${D}${bindir}
         install -m 0755 ${WORKDIR}/configure-smart-channels.sh ${D}${bindir}
+        install -m 0755 ${WORKDIR}/gst-server.sh ${D}${bindir}
 }
 
 pkg_postinst_${PN} () {
