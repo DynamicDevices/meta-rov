@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.rovserver;md5=4d7af0f1bdfa2e0c50324fbf5c54485
                     file://COPYING.mono-upnp;md5=2b0fcb9ea37f23f59acc7163e7727d39 \
 "
 
-DEPENDS = "mono"
+DEPENDS = "mono wiringpi"
 
 SRCBRANCH = "master"
 SRC_URI = "git://git.assembla.com/urov.rov-server.git;protocol=ssh;user=git;branch=${SRCBRANCH}"
