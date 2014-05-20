@@ -10,12 +10,20 @@ LIC_FILES_CHKSUM = "file://LICENSE.rovserver;md5=4d7af0f1bdfa2e0c50324fbf5c54485
                     file://COPYING.mono-upnp;md5=2b0fcb9ea37f23f59acc7163e7727d39 \
 "
 
-DEPENDS = "mono wiringpi"
+DEPENDS = "mono pi-blaster"
 
 SRCBRANCH = "master"
-SRC_URI = "git://git.assembla.com/urov.rov-server.git;protocol=ssh;user=git;branch=${SRCBRANCH}"
+SRC_URI = "git://git.assembla.com/urov.rov-server.git;protocol=ssh;user=git;branch=${SRCBRANCH} \
+	   file://rov-server.boot.sh \
+"
 
 S = "${WORKDIR}/git"
+
+inherit update-rc.d
+
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME_${PN} = "rov-server.boot.sh"
+INITSCRIPT_PARAMS_${PN} = "defaults 20 80"
 
 CONFIGURATION = "Debug"
 
@@ -24,23 +32,29 @@ do_compile() {
 }
 
 do_install() {
-        mkdir -p ${D}${bindir}
+        mkdir -p ${D}${sbindir}
+        mkdir -p ${D}${sysconfdir}/init.d
         mkdir -p ${D}${libdir}/${PN}
         mkdir -p ${D}${libdir}/${PN}/.debug
 
         install -m 0755 ${S}/ROVServer/bin/${CONFIGURATION}/*.mdb ${D}${libdir}/${PN}/.debug
         install -m 0755 ${S}/ROVServer/bin/${CONFIGURATION}/*.exe ${D}${libdir}/${PN}
+        install -m 0755 ${S}/ROVServer/bin/${CONFIGURATION}/*.config ${D}${libdir}/${PN}
         install -m 0755 ${S}/ROVServer/bin/${CONFIGURATION}/*.dll ${D}${libdir}/${PN}
 
-        install -m 0755 ${S}/script.in ${D}${bindir}/${PN}
-        sed -i "s|@MONO@|mono|g" ${D}${bindir}/${PN}
-        sed -i "s|@prefix@|/usr|g" ${D}${bindir}/${PN}
-        sed -i "s|@APP@|${PN}|g" ${D}${bindir}/${PN}
+        install -m 0755 ${S}/script.in ${D}${sbindir}/${PN}
+        sed -i "s|@MONO@|mono|g" ${D}${sbindir}/${PN}
+        sed -i "s|@prefix@|/usr|g" ${D}${sbindir}/${PN}
+        sed -i "s|@APP@|${PN}|g" ${D}${sbindir}/${PN}
+
+        install -m 0755 ${WORKDIR}/${PN}.boot.sh ${D}${sysconfdir}/init.d/${PN}.boot.sh
 }
 
 FILES_${PN} = "${libdir}/${PN}/*.exe \
+		${libdir}/${PN}/*.config \
 		${libdir}/${PN}/*.dll \
-		${bindir}/${PN} \
+		${sbindir}/${PN} \
+		${sysconfdir}/init.d/${PN}.boot.sh \
 "
 
 FILES_${PN}-dbg += "${libdir}/${PN}/.debug/*"
