@@ -54,6 +54,7 @@ IMAGE_INSTALL += "\
                 gst-plugins-good-multipart \
                 gst-ffmpeg \
 		rov-server \
+		pi-blaster \
 		"
 
 # Disable splash
