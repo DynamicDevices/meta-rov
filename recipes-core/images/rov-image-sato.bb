@@ -53,6 +53,7 @@ IMAGE_INSTALL += "\
                 gst-plugins-base-videorate \
                 gst-plugins-good-multipart \
                 gst-ffmpeg \
+		rov-server \
 		"
 
 # Disable splash
