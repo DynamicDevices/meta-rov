@@ -1,6 +1,5 @@
 DESCRIPTION = "ROV WebUI server files"
 HOMEPAGE = "https://www.assembla.com/spaces/urov"
-DEPENDS = "apache2"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://rov/LICENSE;md5=4d7af0f1bdfa2e0c50324fbf5c544857"
 
@@ -13,9 +12,11 @@ S = "${WORKDIR}/git"
 SRCREV = "${AUTOREV}"
 
 do_install () {
-    install -d ${D}/var/www/rov
-    cp -rpvf ${S}/rov/* ${D}/var/www/rov
+    install -d ${D}/usr/share/apache2/htdocs/rov
+    cp -rpvf ${S}/rov/* ${D}/usr/share/apache2/htdocs/rov
 }
 
-FILES_${PN}-www = "/var/www/rov/*"
+FILES_${PN} = "/usr/share/apache2/htdocs/rov/*"
+
+RDEPENDS_${PN} = "apache2"
 
