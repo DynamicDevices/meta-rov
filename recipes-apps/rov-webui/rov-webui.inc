@@ -1,8 +1,8 @@
 DESCRIPTION = "ROV WebUI server files"
 HOMEPAGE = "https://www.assembla.com/spaces/urov"
-DEPENDS = "mjpg-streamer"
+DEPENDS = "apache2"
 LICENSE = "GPLv3"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=4d7af0f1bdfa2e0c50324fbf5c544857"
+LIC_FILES_CHKSUM = "file://rov/LICENSE;md5=4d7af0f1bdfa2e0c50324fbf5c544857"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
 
@@ -13,9 +13,9 @@ S = "${WORKDIR}/git"
 SRCREV = "${AUTOREV}"
 
 do_install () {
-    install -d ${D}/var/www/
-    cp -rpvf ${S}/* ${D}/var/www
+    install -d ${D}/var/www/rov
+    cp -rpvf ${S}/rov/* ${D}/var/www/rov
 }
 
-FILES_${PN}-www = "/var/www/*"
+FILES_${PN}-www = "/var/www/rov/*"
 
