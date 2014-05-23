@@ -55,6 +55,12 @@ IMAGE_INSTALL += "\
                 gst-ffmpeg \
 		rov-server \
 		pi-blaster \
+		omxplayer \
+		v4l-utils \
+		rpi-gpio \
+		userland \
+		gst-openmax \
+		rov-webui \
 		"
 
 # Disable splash
