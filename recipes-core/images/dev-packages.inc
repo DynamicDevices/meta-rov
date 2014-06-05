@@ -6,6 +6,7 @@ IMAGE_INSTALL += " \
                 devmem2 \
                 monotools-server \
                 i2c-tools \
+		bintools \
 "
 
 

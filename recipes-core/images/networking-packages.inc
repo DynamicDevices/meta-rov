@@ -10,5 +10,7 @@ IMAGE_INSTALL += " \
 	tcpdump \
 	traceroute \
         nfs-utils \
-        "
+        ppp \
+        wpa-supplicant \
+"
 
