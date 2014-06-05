@@ -11,11 +11,12 @@ require rpi-packages.inc
 
 IMAGE_FEATURES += "ssh-server-openssh package-management"
 
-#	        kernel-modules \
 #		lua5.1 \
 #
 
 IMAGE_INSTALL += "\
+	        kernel-modules \
+		\
 		nano \
                 mjpg-streamer \
 		v4l-utils \
